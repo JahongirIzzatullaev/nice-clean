@@ -1,17 +1,17 @@
 <?php
 /*
-Template Name: CargoZone - Transport and Cargo Template
+Template Name: NiceClean
 
 Variable
 	$recaptchaSecret : Recaptcha Secret Key
- 
+
 	$dzName : Contact Person Name
 	$dzEmail : Contact Person Email
 	$dzMessage : Contact Person Message
 	$dzRes : response holder
 	$dzOtherField : Form other additional fields
-	
-	
+
+
 	$dzMailSubject : Mail Subject.
 	$dzMailMessage : Mail Body
 	$dzMailHeader : Mail Header
@@ -40,7 +40,7 @@ try {
 
         /* validate the ReCaptcha, if something is wrong, we throw an Exception,
 			i.e. code stops executing and goes to catch() block */
-        
+
         if (!isset($_POST['g-recaptcha-response'])) {
             $dzRes['status'] = 0;
 			$dzRes['msg'] = 'ReCaptcha is not set.';
@@ -49,11 +49,11 @@ try {
         }
 
         /* do not forget to enter your secret key from https://www.google.com/recaptcha/admin */
-        
+
         $recaptcha = new \ReCaptcha\ReCaptcha($recaptchaSecret, new \ReCaptcha\RequestMethod\CurlPost());
-        
+
         /* we validate the ReCaptcha field together with the user's IP address */
-        
+
         $response = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
 
         if (!$response->isSuccess()) {
@@ -62,15 +62,15 @@ try {
 			echo json_encode($dzRes);
 			exit;
         }
-        
+
 		#### Contact Form Script ####
 		if($_POST['dzToDo'] == 'Contact')
 		{
 			$dzName = trim(strip_tags($_POST['dzName']));
 			$dzEmail = trim(strip_tags($_POST['dzEmail']));
-			$dzMessage = strip_tags($_POST['dzMessage']);	
+			$dzMessage = strip_tags($_POST['dzMessage']);
 			$dzRes = "";
-			if (!filter_var($dzEmail, FILTER_VALIDATE_EMAIL)) 
+			if (!filter_var($dzEmail, FILTER_VALIDATE_EMAIL))
 			{
 				$dzRes['status'] = 0;
 				$dzRes['msg'] = 'Wrong Email Format.';
@@ -82,7 +82,7 @@ try {
 								Email: $dzEmail<br/>
 								Message: $dzMessage<br/>
 								";
-								
+
 			$dzOtherField = "";
 			if(!empty($_POST['dzOther']))
 			{
@@ -95,8 +95,8 @@ try {
 					$dzOtherField .= $fieldName." : ".$fieldValue."<br>";
 				}
 			}
-			$dzMailMessage .= $dzOtherField; 
-								
+			$dzMailMessage .= $dzOtherField;
+
 			$dzEmailHeader  	= "MIME-Version: 1.0\r\n";
 			$dzEmailHeader 		.= "Content-type: text/html; charset=iso-8859-1\r\n";
 			$dzEmailHeader 		.= "From:$dzEmailFrom <$dzEmail>";
@@ -115,24 +115,24 @@ try {
 			exit;
 		}
 		#### Contact Form Script End ####
-		
+
 		#### Appointment Form Script ####
 		if($_POST['dzToDo'] == 'Appointment')
 		{
 			$dzName = trim(strip_tags($_POST['dzName']));
 			$dzEmail = trim(strip_tags($_POST['dzEmail']));
-			$dzMessage = strip_tags($_POST['dzMessage']);	
+			$dzMessage = strip_tags($_POST['dzMessage']);
 			$dzRes = "";
-			if(!filter_var($dzEmail, FILTER_VALIDATE_EMAIL)) 
+			if(!filter_var($dzEmail, FILTER_VALIDATE_EMAIL))
 			{
 				$dzRes['status'] = 0;
 				$dzRes['msg'] = 'Wrong Email Format.';
 				echo json_encode($dzRes);
 				exit;
 			}
-			
-				
-			
+
+
+
 			$dzMailSubject = 'CargoZone|Appointment Form: A Person want to contact';
 			$dzMailMessage	= 	"
 								A person want to contact you: <br><br>
@@ -152,8 +152,8 @@ try {
 					$dzOtherField .= $fieldName." : ".$fieldValue."<br>";
 				}
 			}
-			$dzMailMessage .= $dzOtherField; 
-			
+			$dzMailMessage .= $dzOtherField;
+
 			$dzEmailHeader  	= "MIME-Version: 1.0\r\n";
 			$dzEmailHeader 		.= "Content-type: text/html; charset=iso-8859-1\r\n";
 			$dzEmailHeader 		.= "From:$dzEmailFrom <$dzEmail>";
@@ -170,9 +170,9 @@ try {
 			}
 			echo json_encode($dzRes);
 			exit;
-		}	
+		}
 		#### Appointment Form Script End ####
-		
+
 	}
 } catch (\Exception $e) {
     $dzRes['status'] = 0;
